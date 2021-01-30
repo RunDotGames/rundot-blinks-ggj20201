@@ -1,0 +1,5 @@
+/.vscode/settings.json
+/.dist/
+.DS_Store
+*.hex
+/releases
