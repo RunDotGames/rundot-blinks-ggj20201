@@ -12,4 +12,4 @@
     * later they wont all show the path, just the last one you pressed
 * tap a blink to "sweep it"
 * the mine will then move if it can and everyone will update their paths
-*keep on sweeping until the mine can't move
+* keep on sweeping until the mine can't move
