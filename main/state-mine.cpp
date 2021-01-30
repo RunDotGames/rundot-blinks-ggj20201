@@ -1,29 +1,26 @@
 #include "state-mine.h"
+#include "state--common.h"
 #include "game-def.h"
 #include "action.h"
+#include "timer.h"
 
 namespace stateMine {
     
-    void loop(const bool isEnter, const stateCommon::LoopData& data){
-        if(isEnter){
-            setValueSentOnAllFaces(GAME_DEF_VALUE_MINE_MIN);
+    void readyUp(){
+        FOREACH_FACE(f){
+            action::send(GAME_DEF_ACTION_MINE_POS, 0, f);
         }
-        bool isClicked = buttonSingleClicked();
-        if(isAlone()){
-            if(isClicked) {
-                stateCommon::handleStateChange(GAME_DEF_STATE_BOARD);
-                return;
-            }
+    }
 
-            setColor(RED);
-            return;
+    void loop(const bool isEnter, const stateCommon::LoopData& data){
+        setColor(RED);
+        if(isEnter){
+            timer::mark(200, readyUp);
         }
 
         if(action::isBroadcastReceived(data.action, GAME_DEF_ACTION_SWEEP)){
-            //TODO Handle Mine Encouters Sweep
+            //TODO HANDLE MINE RESPONDS TO SWEEP
         }
-        setColor(WHITE);
-        
     }
 
 }

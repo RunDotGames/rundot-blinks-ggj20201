@@ -3,11 +3,11 @@
 
     #include "state--common.h"
 
-    #define GAME_DEF_STATE_BOARD 0
-    #define GAME_DEF_STATE_MINE 1
-    #define GAME_DEF_STATE_SWEPT 2
+    #define GAME_DEF_STATE_SETUP 0
+    #define GAME_DEF_STATE_PLAY 1
+    #define GAME_DEF_STATE_MINE 2
     #define GAME_DEF_STATE_LENGTH 3
-    #define GAME_DEF_STATE_DEFAULT GAME_DEF_STATE_BOARD
+    #define GAME_DEF_STATE_DEFAULT GAME_DEF_STATE_SETUP
 
     /*
     * Avoiding a dependency cycle between this game definition and the more generalized state machine.
@@ -17,11 +17,12 @@
     #if GAME_DEF_STATE_LENGTH != STATE_COMMON_STATE_LEN
         #error "game state length must equal state machine state length"
     #endif
-
     
-    #define GAME_DEF_VALUE_IDLE 0
-    #define GAME_DEF_VALUE_MINE_MIN 1
+    #define GAME_DEF_DIST_INVALID 128
 
-    #define GAME_DEF_ACTION_SWEEP 1
+    #define GAME_DEF_ACTION_PLAY 1
+    #define GAME_DEF_ACTION_MINE_POS 2
+    #define GAME_DEF_ACTION_SWEEP 3
+    
 
 #endif

@@ -3,16 +3,16 @@
 #include "state--common.h"
 #include "timer.h"
 #include "game-def.h"
-#include "state-board.h"
+#include "state-setup.h"
+#include "state-play.h"
 #include "state-mine.h"
-#include "state-swept.h"
 
 namespace _main_ {
     
     void setup() {
-        stateCommon::addState(stateBoard::loop, GAME_DEF_STATE_BOARD);
+        stateCommon::addState(stateSetup::loop, GAME_DEF_STATE_SETUP);
+        stateCommon::addState(statePlay::loop, GAME_DEF_STATE_PLAY);
         stateCommon::addState(stateMine::loop, GAME_DEF_STATE_MINE);
-        stateCommon::addState(stateSwept::loop, GAME_DEF_STATE_SWEPT);
     }
 
     
