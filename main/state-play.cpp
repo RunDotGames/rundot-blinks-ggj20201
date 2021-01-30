@@ -13,6 +13,13 @@ namespace statePlay {
     bool _isSwept;
     bool _isLastSweep;
 
+    void resetDistances(){
+        FOREACH_FACE(f){
+            _distances[f] = GAME_DEF_DIST_INVALID;
+        }
+        _myDistance = GAME_DEF_DIST_INVALID;
+    }
+
     void updateSweep(bool pressed, const stateCommon::LoopData& data){
         if(pressed && !_isSwept){
             _isSwept = true;
@@ -27,6 +34,9 @@ namespace statePlay {
     }
 
     void updateDistances(const stateCommon::LoopData& data){
+        if(action::isBroadcastReceived(data.action, GAME_DEF_ACTION_RESET_DISTANCES)){
+            resetDistances();
+        }
         if(data.action.type != GAME_DEF_ACTION_MINE_POS){
             return;
         }
@@ -47,20 +57,34 @@ namespace statePlay {
             action::send(GAME_DEF_ACTION_MINE_POS, _myDistance, f);
         }
     }
+
+    void updateInform(const stateCommon::LoopData& data){
+        if(!action::isBroadcastReceived(data.action, GAME_DEF_ACTION_REQUEST_INFORM)){
+            return;
+        }
+
+        if(_isSwept){
+            setValueSentOnAllFaces(GAME_DEF_VAL_SWEPT_TAKEN);
+            return;
+        }
+        setValueSentOnAllFaces(GAME_DEF_VAL_SWEPT_FREE);
+    }
     
     void loop(const bool isEnter, const stateCommon::LoopData& data){
         bool isPressed = buttonSingleClicked();
         if(isEnter){
-            // timer::mar
             _isSwept = false;
             _isLastSweep = false;
-            FOREACH_FACE(f){
-                _distances[f] = GAME_DEF_DIST_INVALID;
-            }
-            _myDistance = GAME_DEF_DIST_INVALID;
+            resetDistances();
         }
+        if(data.action.type == GAME_DEF_ACTION_BECOME_MINE){
+            stateCommon::handleStateChange(GAME_DEF_STATE_MINE);
+            return;
+        }
+
         updateDistances(data);
         updateSweep(isPressed, data);
+        updateInform(data);
         setColor(BLUE);
         if(_isSwept){
             setColor(dim(GREEN, 64));
