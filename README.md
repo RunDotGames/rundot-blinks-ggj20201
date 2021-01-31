@@ -1,6 +1,6 @@
-# rundot-blinks-ggj20201
+# Sleuth
 
-> Its like minesweeper, but the theres just one mine, and the mine moves.
+> The ROOK GANG is fleeing GAMBIT MANOR with the precious BISHOP SAPPHIRE in tow! Follow their trail, corner the thieves, but don't get caught unawares in pursuit.
 
 ## Overview
 
@@ -8,52 +8,38 @@
 * Blinks Required: 6
 * Blinks Recommended: 12+
 
-One evil blink out there hiding amongst the crowd. Hunt it down by tapping around to trap it and win. Just don't tap on it directly while your hunting and blow the whole thing up.
-
 ## Instructions
 
-### Set Things Up
+### Setting the Stage
 
-* Join all your blinks into a connected field and then **long press** one of them until it blinks white to reset the field.
-* The field should now be pulsing white.
+* Build the alleys and streets of the city you'll be chasing the ROOK GANG through by joining all your blinks into a connected field and then **long press** one of them until the city blinks white.
+* **Double tap** any of the blinks to randomly place the ROOK GANG. The blinks will spin white while they figure this out and then pulse blue once the ROOK GANG is in place.
 
-* **Double tap** any of the blinks to turn a random one among them evil. The blinks will spin white while they draw straws and then pulse blue once one of them has become a hidden kind of evil.
-  * **Long press** at anytime to reset the game.
+### Let the Chase Begin
 
-### Hunt Down The Evil Blink
-
-* **Double Tap** any blink currently unchecked (blue).
-* The checked blink will spin in anticipation.
-* If the blink checked was evil, you loose and the whole board will spiral red in turmoil.
+* **Double Tap** any un-searched (blue) blink to investigate a city street.
+* Blink under investigation will spin blue in anticipation.
+* If the ROOK GANG gets the drop on you (you clicked on the Gang's blink directly), you loose!. The Gang's renown  will spiral outward (in red) throughout the whole city.
   * Take a deep breath, focus, and **long press** any blink to start over
-* If the blink checked was a normal, law abiding blink, it will point in the direction of the evil blink.
-  * The face nearest the evil blink will turn yellow (the rest green)
+* If the blink under investigation was clear, it will point in the direction of the ROOK GANG
+  * The face nearest the ROOK GANG will turn yellow (the rest green)
   * If two faces are equally distant, they will both turn yellow
-* Repeat these steps until you either win by cornering the evil blink or loose by tapping on it directly.
+* Repeat these steps until you either win by cornering the ROOK GANG or loose by tapping on them directly.
 
-### Evil Blink On The Move
+### ROOK GANG on the Run
 
-* Every time you check a blink, if the evil blink can, it WILL ALWAYS trade places with a neighbor
-  * It cannot trade places with a checked blink
-  * The last blink checked always points to this new location
-* Every time you check a blink, the last blink checked (that one that was pointing to the evil blink) will stop pointing and become a boring, safe, green checked blink.
+* Every time you investigate a blink, if the ROOK GANG can, it will always move to the next street (connected blink)
+  * They cannot move to a street you have investigated.
+  * The last blink investigated always points to their new location
+* Every time you investigate a new street, the last street investigated (that one that was pointing to the Gang) will stop. But remain locked off, preventing the ROOK GANG's return.
 
-### Right Where You Wanted Em'
+### No where to hide
 
-If, after a blink is checked, the evil blink has no where to run to, its trapped! You Win! The board will now spin in green bliss. **Long press** any blink to end the celebration and start all over again.
+If, after investigating a street, the ROOK GANG has no where to run to, its trapped! You Win! The city is safe once again! (blinks will spin green in celebration). **Long press** any blink to start over and begin the chase anew.
 
-### Not Saying "I Told You So" But...
+## Difficulty / Game Modes
 
-If you tap on the evil blink and loose, the last blink checked will continue pointing out the evil blink in a kind (and not at all passive aggressive) attempt to help you learn from your mistakes.
-
-## Debugging
-
-This is a jam project after all. If you see something odd like a glitch or odd evil blink behavior you can switch the blink colors to debug mode to help troubleshoot (and or cheat).
-
-In the [globals.h](main/globals.h) header. Uncomment the following line:
-
-```C
-// #define GLOBALS_DEBUG 
-```
-
-Now the evil blink lights up red and all the blinks point to it, all the time, always.
+* While setting things up (the city is pulsing white), triple click a blink to change the game mode.
+  * One red face indicates hard mode: Blinks pointing to the gang will lie with two faces if only one face would have been flagged.
+  * Two red faces indicates easy (debug) mode: The gang lights up in red and all blocks always point them out.
+  * No red faces indicates normal mode.

@@ -29,6 +29,24 @@ namespace stateMine {
         stateCommon::handleStateChange(GAME_DEF_STATE_PLAY);
     }
 
+    void drawStandard(){
+        if(_trapped){
+            animate::pulse(YELLOW, GLOBALS_FAST_PULSE);
+            return;
+        }
+
+        if(_exploded){
+            animate::pulse(RED, GLOBALS_FAST_PULSE);
+            return;
+        }
+
+        animate::pulse(BLUE, GLOBALS_SLOW_PULSE);
+    }
+
+    void drawDebug(){
+        setColor(RED);
+    }
+
     void gatherInform(){
         byte freeFaces[FACE_COUNT];
         byte freeFaceCount = 0;
@@ -95,22 +113,15 @@ namespace stateMine {
             _exploded = true;
             triggerEnd(false);
         }
-        #ifdef GLOBALS_DEBUG
-        setColor(RED);
-        #endif
-        #ifndef GLOBALS_DEBUG
-        if(_trapped){
-            animate::pulse(YELLOW, GLOBALS_FAST_PULSE);
-            return;
+        
+        switch (globals::getDisplayMode()) {
+            case GLOBALS_DISPLAY_MODE_DEBUG:
+                drawDebug();
+                break;
+            default:
+                drawStandard();
+                break;
         }
-
-        if(_exploded){
-            animate::pulse(RED, GLOBALS_FAST_PULSE);
-            return;
-        }
-
-        animate::pulse(BLUE, GLOBALS_SLOW_PULSE);
-        #endif
     }
 
 }

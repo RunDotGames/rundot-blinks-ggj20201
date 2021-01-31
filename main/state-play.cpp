@@ -16,13 +16,43 @@ namespace statePlay {
     bool _isSwept;
     bool _isLastSweep;
     bool _isSpinning;
+    byte _lieDirection;
 
     bool isLastSwept(){
         return _isLastSweep;
     }
 
-    void draw(Color backing){
-        #ifdef GLOBALS_DEBUG
+    void drawPointers(bool isHard){
+        byte pointerCount = 0;
+        byte pointerFace = FACE_COUNT;
+        Color color = YELLOW;
+        if(isHard){
+            color = RED;
+        }
+        FOREACH_FACE(f){
+            byte fromOnFace =_distances[f] + 1;
+            if(_myDistance  != fromOnFace){
+                continue;
+            }
+
+            setColorOnFace(color, f);
+            pointerCount++;
+            pointerFace = f;
+        }
+        if(!isHard || pointerCount > 1) {
+            return;
+        }
+        if(_lieDirection == FACE_COUNT){
+            if(random(1) == 0){
+                _lieDirection = FACE_COUNT + 1;
+            } else {
+                _lieDirection = FACE_COUNT - 1;
+            }
+        }
+        setColorOnFace(color, (pointerFace + _lieDirection) % FACE_COUNT);
+    }
+
+    void drawDebug(){
         setColor(BLUE);
         if(_isSwept){
             setColor(dim(GREEN, 64));
@@ -30,15 +60,10 @@ namespace statePlay {
         if(_isLastSweep){
             setColor(GREEN);
         }
-        
-        FOREACH_FACE(f){
-            if(_myDistance  == _distances[f] + 1){
-                setColorOnFace(YELLOW, f);
-            }
-        }
-        #endif
+        drawPointers(false);
+    }
 
-        #ifndef GLOBALS_DEBUG
+    void drawStandard(Color backing, bool isHardMode){
         if(_isSpinning){
             animate::spin(BLUE, GLOBALS_FAST_SPIN);
             return;
@@ -54,15 +79,25 @@ namespace statePlay {
             return;
         }
 
-        FOREACH_FACE(f){
-            if(_myDistance  == _distances[f] + 1){
-                setColorOnFace(YELLOW, f);
-            }
+        drawPointers(isHardMode);
+    }
+
+    void draw(Color backing){
+        switch (globals::getDisplayMode()) {
+            case GLOBALS_DISPLAY_MODE_DEBUG:
+                drawDebug();
+                break;
+            case GLOBALS_DISPLAY_MODE_HARD:
+                drawStandard(backing, true);
+                break;
+            default:
+                drawStandard(backing, false);
+                break;
         }
-        #endif
     }
 
     void resetDistances(){
+        _lieDirection = FACE_COUNT;
         FOREACH_FACE(f){
             _distances[f] = GAME_DEF_DIST_INVALID;
         }
