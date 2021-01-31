@@ -8,7 +8,7 @@
 * Blinks Required: 6
 * Blinks Recommended: 12+
 
-One evil blink out there is a mine hiding amongst the crowd. Hunt it down by tapping around to trap it and win. Just dont tap on the mine while your hunting and blow the whole thing up.
+One evil blink out there is a mine hiding amongst the crowd. Hunt it down by tapping around to trap it and win. Just don't tap on the mine while your hunting and blow the whole thing up.
 
 ## Instructions
 
@@ -32,11 +32,23 @@ One evil blink out there is a mine hiding amongst the crowd. Hunt it down by tap
 
 ### Evil Blink On The Move
 
-* Every time you check a blink, if the evil blink can, it WILL ALWAYS move to a neighboor
+* Every time you check a blink, if the evil blink can, it WILL ALWAYS move to a neighbor
   * It cannot moved to checked blinks
   * The last blink checked always points to this new location
 * Every time you check a blink, the last blink checked (that one that was pointing to the evil blink) will stop pointing and become a boring, safe green checked blink.
 
 ### Right Where You Wanted Em'
 
-If, after a blink is checked, the evil blink has no where to run to (no where to hide.), its trapped! You Win! The board will now spiin in green bliss. **Long press** any blink to end the celibration and start all over again.
+If, after a blink is checked, the evil blink has no where to run to, its trapped! You Win! The board will now spin in green bliss. **Long press** any blink to end the celebration and start all over again.
+
+## Debugging
+
+This is a jam project after all. If you see something odd like a glitch or odd evil blink behavior you can switch the blink colors to debug mode to help troubleshoot (and or cheat).
+
+In the [globals.h](main/globals.h) header. Uncomment the following line:
+
+```C
+// #define GLOBALS_DEBUG 
+```
+
+Now the evil blink lights up red and all the blinks point to it, all the time, always.
