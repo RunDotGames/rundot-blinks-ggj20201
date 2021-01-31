@@ -11,8 +11,7 @@ namespace stateMine {
     byte _targetedFace = FACE_COUNT;
     bool _exploded;
     bool _trapped;
-
-
+    
     void triggerEnd(bool isVictory){
         FOREACH_FACE(f){
             action::send(GAME_DEF_ACTION_BECOME_END, isVictory, f);
@@ -31,28 +30,51 @@ namespace stateMine {
     }
 
     void gatherInform(){
+        byte freeFaces[FACE_COUNT];
+        byte freeFaceCount = 0;
         FOREACH_FACE(f){
+            freeFaces[f] = false;
             if(isValueReceivedOnFaceExpired(f)){
                 continue;
             }
             byte value = getLastValueReceivedOnFace(f);
-            if(value == GAME_DEF_VAL_SWEPT_FREE){
-                _targetedFace = f;
-                action::broadcast(GAME_DEF_ACTION_RESET_DISTANCES, millis());
-                timer::mark(200, swapOutMine);
-                return;
+            if(value != GAME_DEF_VAL_SWEPT_FREE){
+                continue;
             }
+
+            freeFaces[f] = true;
+            freeFaceCount++;
+        }
+        if(freeFaceCount == 0){
+            _trapped = true;
+            triggerEnd(true);
+            return;
         }
 
-        _trapped = true;
-        triggerEnd(true);
+        byte randomFace = random(freeFaceCount-1);
+        byte targetFace = 0;
+        FOREACH_FACE(f){
+            if(!freeFaces[f]){
+                continue;
+            }
+
+            if(targetFace != randomFace){
+                targetFace++;
+                continue;
+            }
+            
+            _targetedFace = f;
+            break;
+        }
+        action::broadcast(GAME_DEF_ACTION_RESET_DISTANCES, millis());
+        timer::mark(GLOBALS_MESSAGE_DELAY, swapOutMine);
     }
 
     void requestInform(){
         FOREACH_FACE(f){
             action::send(GAME_DEF_ACTION_REQUEST_INFORM, millis(), f);
         }
-        timer::mark(200, gatherInform);
+        timer::mark(GLOBALS_MESSAGE_DELAY, gatherInform);
     }
 
     void loop(const bool isEnter, const stateCommon::LoopData& data){
@@ -62,11 +84,11 @@ namespace stateMine {
             _trapped = false;
             _exploded = false;
             _targetedFace = FACE_COUNT;
-            timer::mark(200, readyUp);
+            timer::mark(GLOBALS_MESSAGE_DELAY, readyUp);
         }
 
         if(action::isBroadcastReceived(data.action, GAME_DEF_ACTION_SWEEP)){
-            timer::mark(200, requestInform);
+            timer::mark(GLOBALS_MESSAGE_DELAY, requestInform);
         }
 
         if(isPressed && !_exploded && !_trapped){

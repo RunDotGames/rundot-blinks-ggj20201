@@ -3,7 +3,7 @@
     #define HEADER_DISTRIBUTED_TASK
     
     #include "blink-types.h"
-    #include "state-common.h"
+    #include "state--common.h"
     
     namespace distributedTask {
         typedef byte (taskHandler)(byte op, byte value);

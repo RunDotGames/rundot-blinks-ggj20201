@@ -13,6 +13,7 @@ namespace _main_ {
     bool _pendingReset = false;
 
     void setup() {
+        randomize();
         stateCommon::addState(stateSetup::loop, GAME_DEF_STATE_SETUP);
         stateCommon::addState(statePlay::loop, GAME_DEF_STATE_PLAY);
         stateCommon::addState(stateMine::loop, GAME_DEF_STATE_MINE);

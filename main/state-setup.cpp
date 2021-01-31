@@ -6,101 +6,74 @@
 #include "state-play.h"
 #include "globals.h"
 #include "animate.h"
+#include "distributed-task.h"
 
 namespace stateSetup {
 
-    bool _isMine;
-    byte _viewState;
+    bool _working;
+    bool _isIndexInitator;
+    byte _index;
+    byte _blinkCount;
 
-
-    void handleNextState(){
+    
+    void handleNextState(byte mineIndex){
         byte targetState = GAME_DEF_STATE_PLAY;
-        if(_isMine){
+        if(mineIndex == _index) {
             targetState = GAME_DEF_STATE_MINE;
         }
         stateCommon::handleStateChange(targetState);
     }
 
-    void handleAnimateDone(){
-        if(_viewState == VIEW_STATE_FADE_IN) {
-            _viewState = VIEW_STATE_FADE_OUT;
-            animate::startAnim();
-            timer::mark(STATE_SETUP_ANIM_DURATION, handleAnimateDone);
-            return;
-        }
-        
-        _viewState = VIEW_STATE_IDLE;
+    void rollMine(){
+        byte mineIndex = random(_blinkCount-1);
+        action::broadcast(GAME_DEF_ACTION_PLAY, mineIndex);
+        handleNextState(mineIndex);
     }
 
-    Color getIndcColor(){
-        if(_isMine){
-            return RED;
+    byte indexHandler(const byte op, const byte payload){
+        if(op == DISTRIBUTED_TASK_OP_PASSING_IN) {
+            _working = true;
+            _index = payload;
+            return payload + 1;
         }
 
-        return GREEN;
-    }
-
-    Color getFadeTo(){
-        if(_viewState == VIEW_STATE_FADE_OUT){
-            return WHITE;
+        if(op == DISTRIBUTED_TASK_OP_PASSED_DONE) {
+            _blinkCount = payload;
+            if(_isIndexInitator){
+                timer::mark(GLOBALS_MESSAGE_DELAY, rollMine);
+            }
+            return payload;
         }
 
-        return getIndcColor();
-    }
-
-    Color getFadeFrom(){
-        if(_viewState == VIEW_STATE_FADE_OUT){
-            return getIndcColor();
-        }
-
-        return WHITE;
+        return payload;
     }
 
     void loop(const bool isEnter, const stateCommon::LoopData& data){
         if(isEnter) {
+            _working = false;
             buttonDoubleClicked();
             timer::cancel();
-            _isMine = false;
-            _viewState = VIEW_STATE_IDLE;
+            _isIndexInitator = false;
+            _index = 0;
+            _blinkCount = 0;
+            distributedTask::reset();
         }  
-        bool isClicked = buttonDoubleClicked();
-        if(isClicked){
-            if(isAlone()){
-                _viewState = VIEW_STATE_FADE_IN;
-                _isMine = !_isMine;
-                animate::startAnim();
-                timer::mark(STATE_SETUP_ANIM_DURATION, handleAnimateDone);
-                return;
-            }
-
-            action::broadcast(GAME_DEF_ACTION_PLAY, millis());
-            handleNextState();
+        if(buttonDoubleClicked()){
+            _isIndexInitator = true;
+            distributedTask::init(GAME_DEF_ACTION_INDEX, indexHandler, 0);
+        }
+        distributedTask::loop(data, GAME_DEF_ACTION_INDEX, indexHandler);
+        if(action::isBroadcastReceived(data.action, GAME_DEF_ACTION_PLAY)) {
+            handleNextState(data.action.payload);
             return;
         }
-
-        if(action::isBroadcastReceived(data.action, GAME_DEF_ACTION_PLAY)){
-            handleNextState();
-            return;
-        }
-
-        #ifdef GLOBALS_DEBUG
-        setColor(WHITE);
-        if(_isMine){
-            setColor(RED)
-        }
-        #endif
-
-        #ifndef GLOBALS_DEBUG
-        if(_viewState == VIEW_STATE_IDLE){
-            animate::pulse(WHITE, GLOBALS_SLOW_PULSE);
-            return;
-        }
-
-        FOREACH_FACE(f){
-            animate::animTransitionFace(getFadeFrom(), getFadeTo(), STATE_SETUP_ANIM_DURATION, f);
-        }        
-        #endif
         
+        if(_working){
+            animate::spin(WHITE, GLOBALS_FAST_SPIN);
+            return;
+        }
+
+        animate::pulse(WHITE, GLOBALS_SLOW_PULSE);
     }
 
 
