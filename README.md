@@ -1,15 +1,42 @@
 # rundot-blinks-ggj20201
 
-> Its like minesweeper, but the theres just one mine, and the mine moves
+> Its like minesweeper, but the theres just one mine, and the mine moves.
 
-* Reprogram the blinks before each game (because I haven't written reset code yet)
-* Remove 1 (and only 1!) blink from the group and single tap it
-  * It will become red (by the time the jam is done it wont stay red I promise)
-* Physically shuffle up all the blinks
-* Join them back together and press any one of them
-* Now press any one of them to start the game
-* the blinks will all light up showing the path to the mine
-    * later they wont all show the path, just the last one you pressed
-* tap a blink to "sweep it"
-* the mine will then move if it can and everyone will update their paths
-* keep on sweeping until the mine can't move
+## Overview
+
+* Players: 1
+* Blinks Required: 6
+* Blinks Recommended: 12+
+
+One evil blink out there is a mine hiding amongst the crowd. Hunt it down by tapping around to trap it and win. Just dont tap on the mine while your hunting and blow the whole thing up.
+
+## Instructions
+
+### Set Things Up
+
+* Join all your blinks into a connected field and then **long press** one of them until it blinks white to reset the field.
+* The field should now be pulsing white.
+
+* **Double tap** any one of them to spawn a random mine. The blinks will spin white while they work and then pulse blue when done.
+  * **Long press** at anytime to reset the game.
+
+### Hunt Down The Evil Blink
+
+* **Double Tap** any blink currently unchecked (blue).
+* The checked blink will spin in anticipation.
+* If the blink checked was evil, you loose and the whole board will spiral red in turmoil.
+  * Take a deep breath, focus, and **long press** any blink to start over
+* If the blink checked was a normal, law abiding blink, it will point in the direction of the evil blink.
+  * The face nearest the evil blink will turn yellow (the rest green)
+  * If two faces are equally distant, they will both turn yellow
+
+### Evil Blink On The Move
+
+* Every time you check a blink, if the evil blink can, it WILL ALWAYS move to a neighboor
+  * It cannot moved to checked blinks
+  * The last blink checked always points to this new location
+* Every time you check a blink, the last blink checked (that one that was pointing to the evil blink) will stop pointing and become a boring, safe green checked blink.
+
+### Right Where You Wanted Em'
+
+If, after a blink is checked, the evil blink has no where to run to (no where to hide.), its trapped! You Win! The board will now spiin in green bliss. **Long press** any blink to end the celibration and start all over again.
