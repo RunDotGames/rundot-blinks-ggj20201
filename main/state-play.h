@@ -8,6 +8,8 @@
 
     namespace statePlay {
         void loop(const bool isEnter, const stateCommon::LoopData& data);
+        bool isLastSwept();
+        void draw(Color backing);
     }
     
 #endif

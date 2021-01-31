@@ -5,6 +5,7 @@
 #include "timer.h"
 #include "globals.h"
 #include "animate.h"
+#include "state-play.h"
 
 namespace stateEnd {
 
@@ -28,6 +29,11 @@ namespace stateEnd {
 
         if(_victory){
             animate::spin(GREEN, GLOBALS_FAST_SPIN);
+            return;
+        }
+
+        if(statePlay::isLastSwept()){
+            statePlay::draw(ORANGE);
             return;
         }
 

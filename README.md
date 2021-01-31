@@ -41,6 +41,10 @@ One evil blink out there hiding amongst the crowd. Hunt it down by tapping aroun
 
 If, after a blink is checked, the evil blink has no where to run to, its trapped! You Win! The board will now spin in green bliss. **Long press** any blink to end the celebration and start all over again.
 
+### Not Saying "I Told You So" But...
+
+If you tap on the evil blink and loose, the last blink checked will continue pointing out the evil blink in a kind (and not at all passive aggressive) attempt to help you learn from your mistakes.
+
 ## Debugging
 
 This is a jam project after all. If you see something odd like a glitch or odd evil blink behavior you can switch the blink colors to debug mode to help troubleshoot (and or cheat).

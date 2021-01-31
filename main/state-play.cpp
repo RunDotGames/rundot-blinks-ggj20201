@@ -17,6 +17,51 @@ namespace statePlay {
     bool _isLastSweep;
     bool _isSpinning;
 
+    bool isLastSwept(){
+        return _isLastSweep;
+    }
+
+    void draw(Color backing){
+        #ifdef GLOBALS_DEBUG
+        setColor(BLUE);
+        if(_isSwept){
+            setColor(dim(GREEN, 64));
+        }
+        if(_isLastSweep){
+            setColor(GREEN);
+        }
+        
+        FOREACH_FACE(f){
+            if(_myDistance  == _distances[f] + 1){
+                setColorOnFace(YELLOW, f);
+            }
+        }
+        #endif
+
+        #ifndef GLOBALS_DEBUG
+        if(_isSpinning){
+            animate::spin(BLUE, GLOBALS_FAST_SPIN);
+            return;
+        }
+
+        if(!_isSwept){
+            animate::pulse(BLUE, GLOBALS_SLOW_PULSE);
+            return;
+        }
+
+        animate::pulse(backing, GLOBALS_SLOW_PULSE);
+        if(!_isLastSweep){
+            return;
+        }
+
+        FOREACH_FACE(f){
+            if(_myDistance  == _distances[f] + 1){
+                setColorOnFace(YELLOW, f);
+            }
+        }
+        #endif
+    }
+
     void resetDistances(){
         FOREACH_FACE(f){
             _distances[f] = GAME_DEF_DIST_INVALID;
@@ -95,7 +140,7 @@ namespace statePlay {
             stateCommon::handleStateChange(GAME_DEF_STATE_MINE);
             return;
         }
-        
+
         if(data.action.type == GAME_DEF_ACTION_BECOME_END){
             stateEnd::setVictory(data.action.payload);
             stateCommon::handleStateChange(GAME_DEF_STATE_END);
@@ -106,44 +151,7 @@ namespace statePlay {
         updateSweep(isPressed, data);
         updateInform(data);
 
-        #ifdef GLOBALS_DEBUG
-        setColor(BLUE);
-        if(_isSwept){
-            setColor(dim(GREEN, 64));
-        }
-        if(_isLastSweep){
-            setColor(GREEN);
-        }
-        
-        FOREACH_FACE(f){
-            if(_myDistance  == _distances[f] + 1){
-                setColorOnFace(YELLOW, f);
-            }
-        }
-        #endif
-
-        #ifndef GLOBALS_DEBUG
-        if(_isSpinning){
-            animate::spin(BLUE, GLOBALS_FAST_SPIN);
-            return;
-        }
-
-        if(!_isSwept){
-            animate::pulse(BLUE, GLOBALS_SLOW_PULSE);
-            return;
-        }
-
-        animate::pulse(GREEN, GLOBALS_SLOW_PULSE);
-        if(!_isLastSweep){
-            return;
-        }
-
-        FOREACH_FACE(f){
-            if(_myDistance  == _distances[f] + 1){
-                setColorOnFace(YELLOW, f);
-            }
-        }
-        #endif
+        draw(GREEN);
 
     }
 
