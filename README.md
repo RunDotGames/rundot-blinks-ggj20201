@@ -8,7 +8,7 @@
 * Blinks Required: 6
 * Blinks Recommended: 12+
 
-One evil blink out there is a mine hiding amongst the crowd. Hunt it down by tapping around to trap it and win. Just don't tap on the mine while your hunting and blow the whole thing up.
+One evil blink out there hiding amongst the crowd. Hunt it down by tapping around to trap it and win. Just don't tap on it directly while your hunting and blow the whole thing up.
 
 ## Instructions
 
@@ -17,7 +17,7 @@ One evil blink out there is a mine hiding amongst the crowd. Hunt it down by tap
 * Join all your blinks into a connected field and then **long press** one of them until it blinks white to reset the field.
 * The field should now be pulsing white.
 
-* **Double tap** any one of them to spawn a random mine. The blinks will spin white while they work and then pulse blue when done.
+* **Double tap** any of the blinks to turn a random one among them evil. The blinks will spin white while they draw straws and then pulse blue once one of them has become a hidden kind of evil.
   * **Long press** at anytime to reset the game.
 
 ### Hunt Down The Evil Blink
@@ -32,10 +32,10 @@ One evil blink out there is a mine hiding amongst the crowd. Hunt it down by tap
 
 ### Evil Blink On The Move
 
-* Every time you check a blink, if the evil blink can, it WILL ALWAYS move to a neighbor
-  * It cannot moved to checked blinks
+* Every time you check a blink, if the evil blink can, it WILL ALWAYS trade places with a neighbor
+  * It cannot trade places with a checked blink
   * The last blink checked always points to this new location
-* Every time you check a blink, the last blink checked (that one that was pointing to the evil blink) will stop pointing and become a boring, safe green checked blink.
+* Every time you check a blink, the last blink checked (that one that was pointing to the evil blink) will stop pointing and become a boring, safe, green checked blink.
 
 ### Right Where You Wanted Em'
 
