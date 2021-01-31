@@ -10,6 +10,9 @@ namespace animate {
 
     void pulse(Color c, byte rate) {
         byte b = sin8_C(millis()/rate);
+        if(b < 128){
+            b = 128;
+        }
         setColor(dim(c, b));
     }
     void pulseOffsetFace(byte face, Color c, byte offset, byte rate) {

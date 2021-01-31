@@ -3,6 +3,9 @@
 #include "action.h"
 #include "state-setup.h"
 #include "timer.h"
+#include "globals.h"
+#include "animate.h"
+#include "state-end.h"
 
 namespace statePlay {
 
@@ -12,6 +15,7 @@ namespace statePlay {
 
     bool _isSwept;
     bool _isLastSweep;
+    bool _isSpinning;
 
     void resetDistances(){
         FOREACH_FACE(f){
@@ -20,10 +24,16 @@ namespace statePlay {
         _myDistance = GAME_DEF_DIST_INVALID;
     }
 
+    void handleSpinDone(){
+        _isSpinning = false;
+    }
+
     void updateSweep(bool pressed, const stateCommon::LoopData& data){
         if(pressed && !_isSwept){
             _isSwept = true;
             _isLastSweep = true;
+            _isSpinning = true;
+            timer::mark(STATE_PLAY_SWEEP_SPIN_TIME, handleSpinDone);
             action::broadcast(GAME_DEF_ACTION_SWEEP, millis());
             return;
         }
@@ -59,7 +69,7 @@ namespace statePlay {
     }
 
     void updateInform(const stateCommon::LoopData& data){
-        if(!action::isBroadcastReceived(data.action, GAME_DEF_ACTION_REQUEST_INFORM)){
+        if(data.action.type != GAME_DEF_ACTION_REQUEST_INFORM){
             return;
         }
 
@@ -67,24 +77,36 @@ namespace statePlay {
             setValueSentOnAllFaces(GAME_DEF_VAL_SWEPT_TAKEN);
             return;
         }
+
         setValueSentOnAllFaces(GAME_DEF_VAL_SWEPT_FREE);
     }
     
     void loop(const bool isEnter, const stateCommon::LoopData& data){
-        bool isPressed = buttonSingleClicked();
+        bool isPressed = buttonDoubleClicked();
         if(isEnter){
+            buttonDoubleClicked();
+            timer::cancel();
             _isSwept = false;
             _isLastSweep = false;
+            _isSpinning = false;
             resetDistances();
         }
         if(data.action.type == GAME_DEF_ACTION_BECOME_MINE){
             stateCommon::handleStateChange(GAME_DEF_STATE_MINE);
             return;
         }
+        
+        if(data.action.type == GAME_DEF_ACTION_BECOME_END){
+            stateEnd::setVictory(data.action.payload);
+            stateCommon::handleStateChange(GAME_DEF_STATE_END);
+            return;
+        }
 
         updateDistances(data);
         updateSweep(isPressed, data);
         updateInform(data);
+
+        #ifdef GLOBALS_DEBUG
         setColor(BLUE);
         if(_isSwept){
             setColor(dim(GREEN, 64));
@@ -98,6 +120,30 @@ namespace statePlay {
                 setColorOnFace(YELLOW, f);
             }
         }
+        #endif
+
+        #ifndef GLOBALS_DEBUG
+        if(_isSpinning){
+            animate::spin(BLUE, GLOBALS_FAST_SPIN);
+            return;
+        }
+
+        if(!_isSwept){
+            animate::pulse(BLUE, GLOBALS_SLOW_PULSE);
+            return;
+        }
+
+        animate::pulse(GREEN, GLOBALS_SLOW_PULSE);
+        if(!_isLastSweep){
+            return;
+        }
+
+        FOREACH_FACE(f){
+            if(_myDistance  == _distances[f] + 1){
+                setColorOnFace(YELLOW, f);
+            }
+        }
+        #endif
 
     }
 
