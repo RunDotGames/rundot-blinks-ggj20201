@@ -29,6 +29,7 @@ One evil blink out there hiding amongst the crowd. Hunt it down by tapping aroun
 * If the blink checked was a normal, law abiding blink, it will point in the direction of the evil blink.
   * The face nearest the evil blink will turn yellow (the rest green)
   * If two faces are equally distant, they will both turn yellow
+* Repeat these steps until you either win by cornering the evil blink or loose by tapping on it directly.
 
 ### Evil Blink On The Move
 
